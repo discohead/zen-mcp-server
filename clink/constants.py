@@ -45,4 +45,10 @@ INTERNAL_DEFAULTS: dict[str, CLIInternalDefaults] = {
         default_role_prompt="systemprompts/clink/default.txt",
         runner="claude",
     ),
+    "copilot": CLIInternalDefaults(
+        parser="copilot_text",
+        additional_args=[],  # -p flag is added by the agent with the prompt
+        default_role_prompt="systemprompts/clink/default.txt",
+        runner="copilot",
+    ),
 }

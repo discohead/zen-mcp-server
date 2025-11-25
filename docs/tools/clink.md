@@ -2,9 +2,9 @@
 
 **Spawn AI subagents, connect external CLIs, orchestrate isolated contexts – all without leaving your session**
 
-The `clink` tool transforms your CLI into a multi-agent orchestrator. Launch isolated Codex instances from _within_ Codex, delegate to Gemini's 1M context, or run specialized Claude agents—all while preserving conversation continuity. Instead of context-switching or token bloat, spawn fresh subagents that handle complex tasks in isolation and return only the results you need.
+The `clink` tool transforms your CLI into a multi-agent orchestrator. Launch isolated Codex instances from _within_ Codex, delegate to Gemini's 1M context, run specialized Claude agents, or leverage GitHub Copilot's coding agent—all while preserving conversation continuity. Instead of context-switching or token bloat, spawn fresh subagents that handle complex tasks in isolation and return only the results you need.
 
-> **CAUTION**: Clink launches real CLI agents with relaxed permission flags (Gemini ships with `--yolo`, Codex with `--dangerously-bypass-approvals-and-sandbox`, Claude with `--permission-mode acceptEdits`) so they can edit files and run tools autonomously via MCP. If that’s more access than you want, remove those flags—the CLI can still open/read files and report findings, it just won’t auto-apply edits. You can also tighten role prompts or system prompts with stop-words/guardrails, or disable clink entirely. Otherwise, keep the shipped presets confined to workspaces you fully trust.
+> **CAUTION**: Clink launches real CLI agents with relaxed permission flags (Gemini ships with `--yolo`, Codex with `--dangerously-bypass-approvals-and-sandbox`, Claude with `--permission-mode acceptEdits`, Copilot with `--allow-all-tools`) so they can edit files and run tools autonomously via MCP. If that's more access than you want, remove those flags—the CLI can still open/read files and report findings, it just won't auto-apply edits. You can also tighten role prompts or system prompts with stop-words/guardrails, or disable clink entirely. Otherwise, keep the shipped presets confined to workspaces you fully trust.
 
 ## Why Use Clink (CLI + Link)?
 
@@ -23,7 +23,7 @@ The subagent:
 - Returns **only the final security report** (not intermediate steps)
 - Your main session stays **laser-focused** on debugging
 
-**Works with any supported CLI**: Codex can spawn Codex / Claude Code / Gemini CLI subagents, or mix and match between different CLIs.
+**Works with any supported CLI**: Codex can spawn Codex / Claude Code / Gemini CLI / GitHub Copilot CLI subagents, or mix and match between different CLIs.
 
 ---
 
@@ -78,7 +78,7 @@ You can make your own custom roles in `conf/cli_clients/` or tweak any of the sh
 ## Tool Parameters
 
 - `prompt`: Your question or task for the external CLI (required)
-- `cli_name`: Which CLI to use - `gemini` (default), `claude`, `codex`, or add your own in `conf/cli_clients/`
+- `cli_name`: Which CLI to use - `gemini` (default), `claude`, `codex`, `copilot`, or add your own in `conf/cli_clients/`
 - `role`: Preset role - `default`, `planner`, `codereviewer` (default: `default`)
 - `files`: Optional file paths for context (references only, CLI opens files itself)
 - `images`: Optional image paths for visual context
@@ -99,6 +99,11 @@ clink to gemini codereviewer: Review payment_service.py for race conditions and 
 **Codex Code Review:**
 ```
 "clink with codex cli and perform a full code review using the codereview role"
+```
+
+**GitHub Copilot Task:**
+```
+"clink with copilot to fix the failing tests in the auth module"
 ```
 
 **Quick Research Question:**
@@ -141,6 +146,7 @@ Clink configurations live in `conf/cli_clients/`. We ship presets for the suppor
 - `gemini.json` – runs `gemini --telemetry false --yolo -o json`
 - `claude.json` – runs `claude --print --output-format json --permission-mode acceptEdits --model sonnet`
 - `codex.json` – runs `codex exec --json --dangerously-bypass-approvals-and-sandbox`
+- `copilot.json` – runs `copilot -p <prompt> --allow-all-tools`
 
 > **CAUTION**: These flags intentionally bypass each CLI's safety prompts so they can edit files or launch tools autonomously via MCP. Only enable them in trusted sandboxes and tailor role prompts or CLI configs if you need more guardrails.
 
@@ -164,6 +170,7 @@ Ensure the relevant CLI is installed and configured:
 - [Claude Code](https://www.anthropic.com/claude-code)
 - [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 - [Codex CLI](https://docs.sourcegraph.com/codex)
+- [GitHub Copilot CLI](https://github.com/github/copilot-cli) - Install via `npm install -g @github/copilot`
 
 ## Related Guides
 
