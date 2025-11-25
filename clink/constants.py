@@ -45,4 +45,10 @@ INTERNAL_DEFAULTS: dict[str, CLIInternalDefaults] = {
         default_role_prompt="systemprompts/clink/default.txt",
         runner="claude",
     ),
+    "copilot": CLIInternalDefaults(
+        parser="copilot_json",
+        additional_args=["--print", "--json"],
+        default_role_prompt="systemprompts/clink/default.txt",
+        runner="copilot",
+    ),
 }
